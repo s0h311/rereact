@@ -1,0 +1,10 @@
+{
+  "ignorePatterns": [
+    ".idea",
+    ".vscode",
+    "node_modules",
+    "*.yaml",
+    "*.json",
+    "*.d.ts"
+  ]
+}

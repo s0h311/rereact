@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "description": "",
   "type": "module",
+  "engines": {
+    "node": "24",
+    "pnpm": "10"
+  },
   "scripts": {},
   "author": "Soheil Nazari <kontakt@soheilnazari.de>",
   "license": "Apache-2.0"

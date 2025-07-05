@@ -1,0 +1,9 @@
+{
+  "name": "rereact",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {},
+  "author": "Soheil Nazari <kontakt@soheilnazari.de>",
+  "license": "Apache-2.0"
+}

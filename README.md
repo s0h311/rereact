@@ -1,5 +1,7 @@
 # ReReact: Simple Meta-Framework for React
 
+## Progress
+
 | Feature                   | Status |
 | ------------------------- | ------ |
 | file system based routing | 🔧     |
@@ -12,5 +14,7 @@
 | docs                      | ❌     |
 
 🔧 = currently working on
+
 ✅ = done
+
 ❌ = not started

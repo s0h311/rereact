@@ -11,9 +11,9 @@ const DEFAULT_HEAD_CHARSET = 'utf-8'
 export async function buildApp(): Promise<void> {
   const config = await getConfig()
 
-  const indexHtmlContent = getIndexHtml(config)
-
   await bundle(config)
+
+  const indexHtmlContent = getIndexHtml(config)
 
   console.log(indexHtmlContent)
 }

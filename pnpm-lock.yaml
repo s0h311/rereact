@@ -46,6 +46,12 @@ importers:
         specifier: 1.0.0-beta.24
         version: 1.0.0-beta.24
 
+  packages/simple-store:
+    dependencies:
+      '@rereact/rereact':
+        specifier: workspace:^
+        version: link:../rereact
+
 packages:
 
   '@babel/code-frame@7.27.1':

@@ -1,6 +1,7 @@
 {
   "name": "@rereact/rereact",
   "type": "module",
+  "module": "dist/index.mjs",
   "scripts": {},
   "dependencies": {
     "nitropack": "^2.11.13",

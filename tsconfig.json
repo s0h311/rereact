@@ -4,6 +4,10 @@
     "noUncheckedIndexedAccess": true,
     "erasableSyntaxOnly": true,
     "types": ["node"],
-    "noEmit": true
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "module": "nodenext",
+    "target": "esnext",
+    "allowImportingTsExtensions": true
   }
 }

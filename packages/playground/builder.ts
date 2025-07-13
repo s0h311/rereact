@@ -1,5 +1,9 @@
 import { rolldown } from 'rolldown'
-import { copyFileSync } from 'node:fs'
+import { copyFileSync, rmSync } from 'node:fs'
+
+const OUTPUT_DIR = './dist'
+
+rmSync(OUTPUT_DIR, { force: true, recursive: true })
 
 const bundle = await rolldown({
   input: ['./main.tsx', './Router.tsx', './app/pages/index.tsx', './app/pages/login.tsx', './app/pages/dashboard.tsx'],
@@ -9,7 +13,7 @@ const bundle = await rolldown({
 })
 
 await bundle.write({
-  dir: 'dist',
+  dir: OUTPUT_DIR,
   format: 'esm',
   minify: false,
 })

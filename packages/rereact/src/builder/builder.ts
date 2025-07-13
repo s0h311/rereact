@@ -3,6 +3,7 @@ import type { ReReactConfigInternal } from '../config/types.ts'
 import { Window } from 'happy-dom'
 import { rolldown } from 'rolldown'
 import { getPagePaths, getRouter } from '../router/router.ts'
+import { rmSync } from 'node:fs'
 
 const DEFAULT_HEAD_TITLE = 'ReReact App :)'
 const DEFAULT_HTML_LANG = 'en'
@@ -25,6 +26,8 @@ async function bundle(config: ReReactConfigInternal): Promise<void> {
   const pagePaths = getPagePaths(config)
 
   const outputDir = `${config.appRootPath}/dist`
+
+  rmSync(outputDir, { force: true, recursive: true })
 
   const bundle = await rolldown({
     input: pagePaths, // TODO also include here the root component from getReactRootComponent

@@ -4,6 +4,8 @@ import { Window } from 'happy-dom'
 import { rolldown } from 'rolldown'
 import { getPagePaths, getRouter } from '../router/router.ts'
 import { rmSync } from 'node:fs'
+import type { Routes } from '../router/types.ts'
+import { basename, dirname } from 'node:path'
 
 const DEFAULT_HEAD_TITLE = 'ReReact App :)'
 const DEFAULT_HTML_LANG = 'en'
@@ -11,17 +13,22 @@ const DEFAULT_HEAD_CHARSET = 'utf-8'
 
 const REACT_ROOT_ELEMENT_ID = 'app'
 
+const ROLLDOWN_DEFAULT_CHUNK_PATTERN = '[name]-[hash].js'
+const PAGE_CHUNK_PATTERN = 'page-[name]-[hash].js'
+
 export async function buildApp(): Promise<void> {
   const config = await getConfig()
 
-  await bundle(config)
-  return
-  const router = getRouter(config)
+  const routes = await bundle(config)
 
+  // TODO now that the routes are mapped to output chunks generate router dynamically for client side rendering
+  const router = getRouter(config, routes)
+
+  // TODO create main.js and bunle it and import it in index.html
   const indexHtmlContent = getIndexHtml(config)
 }
 
-async function bundle(config: ReReactConfigInternal): Promise<void> {
+async function bundle(config: ReReactConfigInternal): Promise<Routes> {
   // TODO maybe it's just enough to use the router as input and not all the pages
   const pagePaths = getPagePaths(config)
 
@@ -36,12 +43,33 @@ async function bundle(config: ReReactConfigInternal): Promise<void> {
     jsx: 'react-jsx',
   })
 
-  const output = await bundle.write({
+  const { output } = await bundle.write({
     dir: outputDir,
     format: 'esm',
     minify: true,
     sourcemap: config.output?.sourcemap ?? false,
+    entryFileNames: ({ moduleIds }) => {
+      const isPage = moduleIds.find((moduleId) => {
+        return basename(dirname(moduleId)) === 'pages'
+      })
+
+      if (isPage) {
+        return PAGE_CHUNK_PATTERN
+      }
+
+      return ROLLDOWN_DEFAULT_CHUNK_PATTERN
+    },
   })
+
+  const routes: Routes = {}
+
+  output.forEach((chunk) => {
+    if (chunk.name && chunk.fileName.includes('page-')) {
+      routes[chunk.name] = chunk.fileName
+    }
+  })
+
+  return routes
 }
 
 function getIndexHtml(config: ReReactConfigInternal): string {

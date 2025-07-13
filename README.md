@@ -14,7 +14,7 @@
 | ------------------------- | ------ |
 | file system based routing | 🔧     |
 | config                    | 🔧     |
-| router                    | ❌     |
+| router                    | 🔧     |
 | SSR                       | ❌     |
 | SEO                       | ❌     |
 | data fetching             | ❌     |

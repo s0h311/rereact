@@ -4,7 +4,7 @@ import { Window } from 'happy-dom'
 import { rolldown } from 'rolldown'
 import { getPagePaths, getRouter } from '../router/router.ts'
 import { rmSync } from 'node:fs'
-import type { Routes } from '../router/types.ts'
+import type { RoutesInternal } from '../router/types.ts'
 import { basename, dirname } from 'node:path'
 
 const DEFAULT_HEAD_TITLE = 'ReReact App :)'
@@ -28,7 +28,7 @@ export async function buildApp(): Promise<void> {
   const indexHtmlContent = getIndexHtml(config)
 }
 
-async function bundle(config: ReReactConfigInternal): Promise<Routes> {
+async function bundle(config: ReReactConfigInternal): Promise<RoutesInternal> {
   // TODO maybe it's just enough to use the router as input and not all the pages
   const pagePaths = getPagePaths(config)
 
@@ -61,7 +61,7 @@ async function bundle(config: ReReactConfigInternal): Promise<Routes> {
     },
   })
 
-  const routes: Routes = {}
+  const routes: RoutesInternal = {}
 
   output.forEach((chunk) => {
     if (chunk.name && chunk.fileName.includes('page-')) {

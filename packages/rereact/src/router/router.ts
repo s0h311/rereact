@@ -1,18 +1,18 @@
 import { createElement, type ReactElement } from 'react'
-import type { Routes } from './types.ts'
+import type { RoutesInternal } from './types.ts'
 import type { ReReactConfigInternal } from '../config/types.ts'
 import { globSync } from 'node:fs'
 import { basename } from 'node:path'
 
 // TODO implement router
-export async function getRouter(config: ReReactConfigInternal, routes: Routes): Promise<ReactElement> {
+export async function getRouter(config: ReReactConfigInternal, routes: RoutesInternal): Promise<ReactElement> {
   return createElement('div')
 }
 
-export function resolveRoutes(config: ReReactConfigInternal): Routes {
+export function resolveRoutes(config: ReReactConfigInternal): RoutesInternal {
   const pagePaths = getPagePaths(config)
 
-  const routes: Routes = {}
+  const routes: RoutesInternal = {}
 
   pagePaths.forEach((filePath) => {
     const fileName = basename(filePath, '.tsx')

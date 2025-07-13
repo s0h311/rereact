@@ -24,14 +24,11 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  packages/rereact:
+  packages/playground:
     dependencies:
-      happy-dom:
-        specifier: ^18.0.1
-        version: 18.0.1
-      nitropack:
-        specifier: ^2.11.13
-        version: 2.11.13(rolldown@1.0.0-beta.24)
+      '@rereact/rereact':
+        specifier: workspace:^
+        version: link:../rereact
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -48,6 +45,31 @@ importers:
       rolldown:
         specifier: 1.0.0-beta.24
         version: 1.0.0-beta.24
+
+  packages/rereact:
+    dependencies:
+      happy-dom:
+        specifier: ^18.0.1
+        version: 18.0.1
+      nitropack:
+        specifier: ^2.11.13
+        version: 2.11.13(rolldown@1.0.0-beta.24)
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.1.0(react@19.1.0)
+      rolldown:
+        specifier: 1.0.0-beta.24
+        version: 1.0.0-beta.24
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.8
+        version: 19.1.8
+      '@types/react-dom':
+        specifier: ^19.1.6
+        version: 19.1.6(@types/react@19.1.8)
 
   packages/simple-store:
     dependencies:

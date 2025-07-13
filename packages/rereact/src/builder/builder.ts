@@ -2,11 +2,7 @@ import { getConfig } from '../config/config.ts'
 import type { ReReactConfigInternal } from '../config/types.ts'
 import { Window } from 'happy-dom'
 import { rolldown } from 'rolldown'
-import { globSync } from 'node:fs'
-import { createRoot } from 'react-dom/client'
-import type { Root } from 'react-dom/client'
-import { createElement, StrictMode } from 'react'
-import { getRouter } from '../router/router.ts'
+import { getPagePaths, getRouter } from '../router/router.ts'
 
 const DEFAULT_HEAD_TITLE = 'ReReact App :)'
 const DEFAULT_HTML_LANG = 'en'
@@ -17,14 +13,15 @@ const REACT_ROOT_ELEMENT_ID = 'app'
 export async function buildApp(): Promise<void> {
   const config = await getConfig()
 
-  const rootComponent = getReactRootComponent()
-
   await bundle(config)
+  return
+  const router = getRouter(config)
 
   const indexHtmlContent = getIndexHtml(config)
 }
 
 async function bundle(config: ReReactConfigInternal): Promise<void> {
+  // TODO maybe it's just enough to use the router as input and not all the pages
   const pagePaths = getPagePaths(config)
 
   const outputDir = `${config.appRootPath}/dist`
@@ -36,18 +33,12 @@ async function bundle(config: ReReactConfigInternal): Promise<void> {
     jsx: 'react-jsx',
   })
 
-  bundle.write({
+  const output = await bundle.write({
     dir: outputDir,
     format: 'esm',
     minify: true,
     sourcemap: config.output?.sourcemap ?? false,
   })
-}
-
-function getPagePaths(config: ReReactConfigInternal): string[] {
-  const pagesGlob = `${config.appRootPath}/app/pages/*`
-
-  return globSync(pagesGlob)
 }
 
 function getIndexHtml(config: ReReactConfigInternal): string {
@@ -74,11 +65,4 @@ function getIndexHtml(config: ReReactConfigInternal): string {
   document.head.appendChild(charsetMetaTag)
 
   return document.documentElement.outerHTML
-}
-
-function getReactRootComponent(): Root {
-  const router = getRouter()
-
-  // TODO add this to main.js and import in index.html
-  return createRoot(document.getElementById(REACT_ROOT_ELEMENT_ID)!).render(createElement(StrictMode, null, router))
 }

@@ -7,7 +7,10 @@
     "node": "24",
     "pnpm": "10"
   },
-  "scripts": {},
+  "scripts": {
+    "lint": "oxlint",
+    "format": "prettier . --write"
+  },
   "author": "Soheil Nazari <kontakt@soheilnazari.de>",
   "license": "Apache-2.0",
   "devDependencies": {

@@ -9,11 +9,15 @@ export async function getConfig(): Promise<ReReactConfigInternal> {
   const appRoot = getAppRoot()
 
   const configFilePath = `${appRoot}/${configFileName}`
+  const outputDir = `${appRoot}/dist`
+  const reReactDir = `${appRoot}/.rereact`
 
   const config: ReReactConfig = await import(configFilePath).then((m) => m.default)
 
   return {
     appRootPath: appRoot,
+    bundleOutputDir: outputDir,
+    reReactDir,
     ...config,
   }
 }

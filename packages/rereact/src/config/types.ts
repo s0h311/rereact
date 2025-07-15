@@ -1,5 +1,7 @@
 export type ReReactConfigInternal = ReReactConfig & {
   appRootPath: string
+  bundleOutputDir: string
+  reReactDir: string
 }
 
 export type ReReactConfig = {

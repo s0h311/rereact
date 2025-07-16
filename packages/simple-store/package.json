@@ -1,6 +1,9 @@
 {
   "name": "simple-store",
   "type": "module",
+  "scripts": {
+    "build": "node ./node_modules/@rereact/rereact/scripts/build.ts --disable-warning=ExperimentalWarning"
+  },
   "dependencies": {
     "@rereact/rereact": "workspace:^",
     "react": "^19.1.0",

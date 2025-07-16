@@ -2,7 +2,7 @@ import { getConfig } from '../config/config.ts'
 import type { ReReactConfigInternal } from '../config/types.ts'
 import { Window } from 'happy-dom'
 import { rolldown } from 'rolldown'
-import { getPagePaths, getRouterComponentPath } from '../router/router.ts'
+import { getPagePaths } from '../router/router.ts'
 import { copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { basename, dirname } from 'node:path'
 import { logAndThrow } from '../utils/logger.ts'
@@ -119,7 +119,7 @@ function createReReactDir(config: ReReactConfigInternal): void {
 function copyRouter(config: ReReactConfigInternal): void {
   const routerPath = `${import.meta.dirname}/../router/Router.tsx`
 
-  const targetPath = getRouterComponentPath(config)
+  const targetPath = `${config.reReactDir}/Router.tsx`
 
   copyFileSync(routerPath, targetPath)
 }

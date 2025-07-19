@@ -6,7 +6,6 @@ import { getPagePaths } from '../router/router.ts'
 import { copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { basename, dirname } from 'node:path'
 import { logAndThrow } from '../utils/logger.ts'
-import type { RouteToComponent } from '../router/types.ts'
 
 const DEFAULT_HEAD_TITLE = 'ReReact App :)'
 const DEFAULT_HTML_LANG = 'en'

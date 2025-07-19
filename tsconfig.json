@@ -9,5 +9,6 @@
     "module": "nodenext",
     "target": "esnext",
     "allowImportingTsExtensions": true
+    "jsx": "react-jsx"
   }
 }

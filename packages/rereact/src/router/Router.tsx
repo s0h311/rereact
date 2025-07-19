@@ -1,9 +1,7 @@
-import { ReactNode } from 'react'
+import type { RouteToComponent } from './types'
 
 type RouteProps = {
-  routes: {
-    [path: `/${string}`]: ReactNode
-  }
+  routes: RouteToComponent
 }
 
 export default function Router({ routes }: RouteProps) {

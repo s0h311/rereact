@@ -6,6 +6,7 @@ import { getPagePaths } from '../router/router.ts'
 import { copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { basename, dirname } from 'node:path'
 import { logAndThrow } from '../utils/logger.ts'
+import type { RouteToComponent } from '../router/types.ts'
 
 const DEFAULT_HEAD_TITLE = 'ReReact App :)'
 const DEFAULT_HTML_LANG = 'en'
@@ -19,11 +20,14 @@ const PAGE_CHUNK_PATTERN = 'page-[name]-[hash].js'
 export async function buildApp(): Promise<void> {
   const config = await getConfig()
 
+  const pagesPaths = getPagePaths(config)
+
   createReReactDir(config)
   copyRouter(config)
-  createMainTs(config)
+  createRoutesFile(config, pagesPaths)
+  copyMainTsx(config)
 
-  const mainChunkName = await bundle(config)
+  const mainChunkName = await bundle(config, pagesPaths)
 
   // TODO now that the routes are mapped to output chunks generate router dynamically for client side rendering
   // const router = getRouter(config, routes)
@@ -35,15 +39,15 @@ export async function buildApp(): Promise<void> {
   writeFileSync(indexHtmlOutputPath, indexHtmlContent, { encoding: 'utf-8' })
 }
 
-async function bundle(config: ReReactConfigInternal): Promise<string> {
-  // TODO maybe it's just enough to use the router as input and not all the pages
+async function bundle(config: ReReactConfigInternal, pagesPaths: string[]): Promise<string> {
+  const mainTsxOutputPath = `${config.reReactDir}/main.tsx`
 
-  const entryPoints = [...getPagePaths(config), `${config.reReactDir}/main.tsx`]
+  const entryPoints = [...pagesPaths, mainTsxOutputPath]
 
   rmSync(config.bundleOutputDir, { force: true, recursive: true })
 
   const bundle = await rolldown({
-    input: entryPoints, // TODO also include here the root component from getReactRootComponent
+    input: entryPoints,
     platform: 'browser',
     treeshake: true,
     jsx: 'react-jsx',
@@ -124,13 +128,42 @@ function copyRouter(config: ReReactConfigInternal): void {
   copyFileSync(routerPath, targetPath)
 }
 
-function createMainTs(config: ReReactConfigInternal): void {
-  const mainTsxCode = `import Router from './Router.tsx'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+function createRoutesFile(config: ReReactConfigInternal, pagesPaths: string[]): void {
+  const routeImports: Record<string, string> = {}
+  const routes: Record<`/${string}`, string> = {}
 
-createRoot(document.getElementById('app')!).render(StrictMode({ children: Router() }));`
+  pagesPaths.forEach((pagePath) => {
+    const componentName = basename(pagePath, '.tsx')
 
-  const mainTsxOutputPath = `${config.reReactDir}/main.tsx`
-  writeFileSync(mainTsxOutputPath, mainTsxCode, { encoding: 'utf-8' })
+    routeImports[componentName] = pagePath
+
+    const route: `/${string}` = componentName === 'index' ? '/' : `/${componentName}`
+
+    routes[route] = componentName
+  })
+
+  let importStatements = ''
+
+  for (const [componentName, componentPath] of Object.entries(routeImports)) {
+    importStatements += `import ${componentName} from '${componentPath}'\n`
+  }
+
+  let defaultExport = 'export default {'
+
+  for (const [route, componentName] of Object.entries(routes)) {
+    defaultExport += `'${route}': ${componentName},`
+  }
+
+  defaultExport += '}'
+
+  const fileContent = importStatements + defaultExport
+
+  writeFileSync(`${config.reReactDir}/routes.ts`, fileContent, { encoding: 'utf-8' })
+}
+
+function copyMainTsx(config: ReReactConfigInternal): void {
+  const mainTsxPath = `${import.meta.dirname}/main.tsx`
+  const mainTsxTargetPath = `${config.reReactDir}/main.tsx`
+
+  copyFileSync(mainTsxPath, mainTsxTargetPath)
 }
